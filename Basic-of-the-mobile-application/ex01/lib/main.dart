@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,35 +23,36 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyAppState extends ChangeNotifier {
-  var current = "A simple text";
-
-  void getNext() {
-    if (current == "A simple text") {
-      current = "Hello Wolrd!";
-    } else {
-      current = "A simple text";
-    }
-    notifyListeners();
-  }
-}
-
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({
     super.key,
   });
 
   @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  var msg = "A simple text";
+
+  @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
     return Scaffold(
       body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,  
             children: [
-              Title(),
+              Title(msg: msg),
               ElevatedButton(
-                onPressed: () => appState.getNext(),
+                onPressed: () {
+                  setState(() {
+                    if (msg == "A simple text") {
+                      msg = "Hello World!";
+                    } else {
+                      msg = "A simple text";
+                    }
+                  });  
+                },
                 child: Text("Click me"),  
               )  
             ]
@@ -63,24 +63,27 @@ class MyHomePage extends StatelessWidget {
 }
 
 class Title extends StatelessWidget {
+  final String msg;
+
   const Title({
     super.key,
+    required this.msg,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);  
-        return Card(
+    return Card(
       color: theme.colorScheme.primary,  
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          "simple text",
+          msg,
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
-            )),
-      ),
+          )),
+      ), 
     );
   }
 }
