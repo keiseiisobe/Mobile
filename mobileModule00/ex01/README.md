@@ -1,3 +1,3 @@
 # ex01
 
-![](images/ios.gif)
+![](ios.gif)
