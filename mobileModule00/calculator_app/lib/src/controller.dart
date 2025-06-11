@@ -6,6 +6,8 @@ class Controller extends ChangeNotifier {
   var _result = "0";
   var _expression = "0";
 
+  static const operators = ["+", "x", "/"];  
+
   String get result => _result;
   String get expression => _expression;
 
@@ -21,11 +23,25 @@ class Controller extends ChangeNotifier {
     notifyListeners();
   }
 
-  void dot() {
-    if (_expression.contains('.')) {
-      return;
+  String _getRightmostDigit(String expression) {
+    String rightmostDigit = "";  
+    for (int i = expression.length - 1; i >= 0; i--) {
+      if (isDigit(expression[i], positiveOnly: true) || expression[i] == '.') {
+        rightmostDigit += expression[i];
+      }
+      else {
+        break;
+      }
     }
+    return rightmostDigit;
+  }
+
+  void dot() {
     if (isDigit(_expression[_expression.length - 1], positiveOnly: true)) {
+      String rightmostDigit = _getRightmostDigit(_expression);
+      if (rightmostDigit.contains('.')) {
+        return;
+      }
       _expression += ".";
       notifyListeners();
     }
@@ -47,7 +63,7 @@ class Controller extends ChangeNotifier {
   }
 
   void operatorExceptMinus(String operator) {
-    if (isDigit(_expression[_expression.length - 1])) {
+    if (isDigit(_expression[_expression.length - 1], positiveOnly: true)) {
       _expression += operator;
       notifyListeners();  
     }
@@ -56,7 +72,8 @@ class Controller extends ChangeNotifier {
   void minus() {
     if (_expression == "0") {
       _expression = "-";
-    } else if (isDigit(_expression[_expression.length - 1], positiveOnly: true)) {
+    } else if ((isDigit(_expression[_expression.length - 1], positiveOnly: true)
+    || operators.contains(_expression[_expression.length - 1]))) {
       _expression += '-';
     }
     notifyListeners();
@@ -71,6 +88,7 @@ class Controller extends ChangeNotifier {
     final expressionAfterReplace = _expression.replaceAll(RegExp(r'x'), '*');
     try {
       num temp = expressionAfterReplace.interpret();
+
       if (isInt(temp)) {
         _result = temp.toInt().toString();
       } else {
@@ -79,7 +97,7 @@ class Controller extends ChangeNotifier {
       _expression = _result;
       notifyListeners();
     } catch (e) {
-      _result = "Impossible";
+      _result = "undefined";
       _expression = "0";
       notifyListeners();
       return;

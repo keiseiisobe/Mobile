@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final brightness = Brightness.light;
     return MaterialApp(
       title: 'ex02',
       theme: ThemeData(
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
           primary: Colors.white,
           // primary variant is gray
           primaryContainer: Colors.grey.shade500,
+          brightness: brightness,
         ),
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.blue,
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        body: Calculator(),
+        body: Calculator(isLightMode: brightness == Brightness.light),
       )
     );
   }
