@@ -166,15 +166,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     return await Geolocator.getCurrentPosition();
   }
 
-  Future<String> getGeoLocationText() async {
-    var geoLocation = await _determinePosition().then((position) {
-      return "Lat: ${position.latitude}, Lon: ${position.longitude}";
-    }).catchError((error) {
-      return "Error: $error";
-    });
-    return geoLocation;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -236,8 +227,17 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                 children: [
                   Text("Currently"),
                   isGeoLocationEnabled 
-                    ? Text(
-                        getGeoLocationText().toString(),
+                    ? FutureBuilder<Position>(
+                        future: _determinePosition(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text("Error: ${snapshot.error}");
+                          } else if (snapshot.hasData) {
+                            final position = snapshot.data!;
+                            return Text("Lat: ${position.latitude}, Lon: ${position.longitude}");
+                          }
+                          return CircularProgressIndicator();
+                        },
                       )
                     : isSearchLocationEnabled 
                       ? Text(searchController.text) 
@@ -250,7 +250,18 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                 children: [
                   Text("Today"),  
                   isGeoLocationEnabled 
-                    ? Text("Geolocation") 
+                    ? FutureBuilder<Position>(
+                        future: _determinePosition(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text("Error: ${snapshot.error}");
+                          } else if (snapshot.hasData) {
+                            final position = snapshot.data!;
+                            return Text("Lat: ${position.latitude}, Lon: ${position.longitude}");
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      )
                     : isSearchLocationEnabled 
                       ? Text(searchController.text) 
                       : Text(""),
@@ -262,7 +273,18 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                 children: [
                   Text("Weekly"),  
                   isGeoLocationEnabled 
-                    ? Text("Geolocation") 
+                    ? FutureBuilder<Position>(
+                        future: _determinePosition(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text("Error: ${snapshot.error}");
+                          } else if (snapshot.hasData) {
+                            final position = snapshot.data!;
+                            return Text("Lat: ${position.latitude}, Lon: ${position.longitude}");
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      )
                     : isSearchLocationEnabled 
                       ? Text(searchController.text) 
                       : Text(""),
