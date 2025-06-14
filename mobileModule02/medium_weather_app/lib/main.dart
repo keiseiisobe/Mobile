@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:window_size/window_size.dart';
 import 'package:geolocator/geolocator.dart';
+import 'src/main_views.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();  
@@ -41,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   final TextEditingController searchController = TextEditingController();
   var isGeoLocationEnabled = false;
   var isSearchLocationEnabled = false;
+  late final Future<Position> geoLocation;
 
   List<Widget> getBottomNavigationBarItems() {
     return [
@@ -129,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     ];
   }
 
-  Future<Position> _determinePosition() async {
+  Future<Position> determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -170,6 +172,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     tabController = TabController(length: 3, vsync: this);
+    geoLocation = determinePosition();
   }
 
   @override
@@ -218,83 +221,9 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),  
-          child: TabBarView(
-            controller: tabController,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,  
-                children: [
-                  Text("Currently"),
-                  isGeoLocationEnabled 
-                    ? FutureBuilder<Position>(
-                        future: _determinePosition(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Text("Error: ${snapshot.error}");
-                          } else if (snapshot.hasData) {
-                            final position = snapshot.data!;
-                            return Text("Lat: ${position.latitude}, Lon: ${position.longitude}");
-                          }
-                          return CircularProgressIndicator();
-                        },
-                      )
-                    : isSearchLocationEnabled 
-                      ? Text(searchController.text) 
-                      : Text(""),
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,  
-                children: [
-                  Text("Today"),  
-                  isGeoLocationEnabled 
-                    ? FutureBuilder<Position>(
-                        future: _determinePosition(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Text("Error: ${snapshot.error}");
-                          } else if (snapshot.hasData) {
-                            final position = snapshot.data!;
-                            return Text("Lat: ${position.latitude}, Lon: ${position.longitude}");
-                          }
-                          return CircularProgressIndicator();
-                        },
-                      )
-                    : isSearchLocationEnabled 
-                      ? Text(searchController.text) 
-                      : Text(""),
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,  
-                children: [
-                  Text("Weekly"),  
-                  isGeoLocationEnabled 
-                    ? FutureBuilder<Position>(
-                        future: _determinePosition(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Text("Error: ${snapshot.error}");
-                          } else if (snapshot.hasData) {
-                            final position = snapshot.data!;
-                            return Text("Lat: ${position.latitude}, Lon: ${position.longitude}");
-                          }
-                          return CircularProgressIndicator();
-                        },
-                      )
-                    : isSearchLocationEnabled 
-                      ? Text(searchController.text) 
-                      : Text(""),
-                ],
-              ),
-            ],
-          ),
+          child: MyMainViews(tabController: tabController, isGeoLocationEnabled: isGeoLocationEnabled, geoLocation: geoLocation, isSearchLocationEnabled: isSearchLocationEnabled, searchController: searchController),
         ),
       ),
     );
   }
 }
-
