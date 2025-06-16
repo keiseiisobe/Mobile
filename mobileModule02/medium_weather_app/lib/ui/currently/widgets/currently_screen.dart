@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import '../../searchbar/view_model/searchbar_viewmodel.dart';
 import '../../geolocation/view_model/geolocation_viewmodel.dart';
 
 class CurrentlyScreen extends StatelessWidget {
   const CurrentlyScreen({
     super.key,
-    required this.searchController,
+    required this.searchViewModel,
     required this.geolocationViewModel,
   });
 
-  final TextEditingController searchController;
+  final SearchbarViewmodel searchViewModel;
   final GeolocationViewModel geolocationViewModel;
 
   @override
@@ -16,8 +17,8 @@ class CurrentlyScreen extends StatelessWidget {
     var locationText = "";
     if (geolocationViewModel.isGeoLocationEnabled) {
       locationText = geolocationViewModel.geolocationText;
-    } else if (searchController.text.isNotEmpty) {
-      locationText = searchController.text;
+    } else if (searchViewModel.isSearchLocationEnabled) {
+      locationText = searchViewModel.searchController.text;
     }
     return  Column(
       mainAxisAlignment: MainAxisAlignment.center,

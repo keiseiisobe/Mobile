@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medium_weather_app/ui/searchbar/view_model/searchbar_viewmodel.dart';
 import '../../searchbar/widgets/searchbar_screen.dart';
 import '../../geolocation/widgets/geolocation_screen.dart';
 import '../../geolocation/view_model/geolocation_viewmodel.dart';
@@ -7,12 +8,12 @@ class TopbarScreen extends StatelessWidget {
   const TopbarScreen({
     super.key,
     required this.tabController,
-    required this.searchController,
+    required this.searchbarViewmodel,
     required this.geolocationViewModel,
   });
 
   final TabController tabController;
-  final TextEditingController searchController;
+  final SearchbarViewmodel searchbarViewmodel;
   final GeolocationViewModel geolocationViewModel;
 
   @override
@@ -31,7 +32,7 @@ class TopbarScreen extends StatelessWidget {
         mouseCursor: SystemMouseCursors.basic,
         tabs: [
           SearchbarScreen(
-            searchController: searchController
+            searchbarViewmodel: searchbarViewmodel,
           ),
           VerticalDivider(
             color: Theme.of(context).colorScheme.onPrimary,

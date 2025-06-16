@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import '../view_model/searchbar_viewmodel.dart';
 
 class SearchbarScreen extends StatelessWidget {
-  const SearchbarScreen({super.key, required this.searchController});
+  const SearchbarScreen({super.key, required this.searchbarViewmodel});
 
-  final TextEditingController searchController;
+  final SearchbarViewmodel searchbarViewmodel;
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +12,7 @@ class SearchbarScreen extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.8,
       alignment: Alignment.bottomLeft,
       child: TextField(
-        controller: searchController,
+        controller: searchbarViewmodel.searchController,
         style: TextStyle(
           color: Theme.of(context).colorScheme.onPrimary,
         ),
@@ -25,6 +26,9 @@ class SearchbarScreen extends StatelessWidget {
           counterText: "",
         ),
         maxLength: 100,  
+        onSubmitted: (value) {
+          searchbarViewmodel.toggleSearchLocation();  
+        },
       ),
     );
   }

@@ -4,6 +4,7 @@ import '../../currently/widgets/currently_screen.dart';
 import '../../today/widgets/today_screen.dart';
 import '../../weekly/widgets/weekly_screen.dart';
 import '../../bottombar/widgets/bottombar_screen.dart';
+import '../../searchbar/view_model/searchbar_viewmodel.dart';
 import '../../geolocation/view_model/geolocation_viewmodel.dart';
 
 
@@ -17,20 +18,28 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late final TabController tabController;
   late final TextEditingController searchController;
-  GeolocationViewModel geolocationViewModel = GeolocationViewModel(
-    isGeoLocationEnabled: false,
-    geolocationText: "",
-    isSearchLocationEnabled: false,
-  );
+  bool isGeoLocationEnabled = false;
+  bool isSearchLocationEnabled = false;
+  late GeolocationViewModel geolocationViewModel;
+  late SearchbarViewmodel searchbarViewmodel;
   //late final Future<Position> geoLocation;
   late final Future<String> citiesData;
-
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 3, vsync: this);
     searchController = TextEditingController();
+    geolocationViewModel = GeolocationViewModel(
+      isGeoLocationEnabled: isGeoLocationEnabled,
+      geolocationText: "",
+      isSearchLocationEnabled: isSearchLocationEnabled,
+    );
+    searchbarViewmodel = SearchbarViewmodel(
+      isSearchLocationEnabled: isSearchLocationEnabled,
+      searchController: searchController,
+      isGeoLocationEnabled: isGeoLocationEnabled,
+    );  
     //geoLocation = determinePosition();
     //citiesData = rootBundle.loadString('assets/cities.csv');
   }
@@ -49,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         backgroundColor: Theme.of(context).colorScheme.secondary,  
         flexibleSpace: TopbarScreen(
           tabController: tabController,
-          searchController: searchController,
+          searchbarViewmodel: searchbarViewmodel,
           geolocationViewModel: geolocationViewModel,
         ),
       ),
@@ -63,16 +72,21 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           child: ListenableBuilder(
             listenable: geolocationViewModel,
             builder: (context, _) {
-              return TabBarView(
-                controller: tabController,
-                children: [
-                  CurrentlyScreen(
-                    searchController: searchController,
-                    geolocationViewModel: geolocationViewModel
-                  ),
-                  TodayScreen(geolocationViewModel: geolocationViewModel),
-                  WeeklyScreen(geolocationViewModel: geolocationViewModel),
-                ],
+              return ListenableBuilder(
+                listenable: searchbarViewmodel,
+                builder: (context, _) {
+                  return TabBarView(
+                    controller: tabController,
+                    children: [
+                      CurrentlyScreen(
+                        searchViewModel: searchbarViewmodel,
+                        geolocationViewModel: geolocationViewModel
+                      ),
+                      TodayScreen(geolocationViewModel: geolocationViewModel),
+                      WeeklyScreen(geolocationViewModel: geolocationViewModel),
+                    ],
+                  );
+                }
               );
             }
           ),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../data/services/geolocator.dart';
+import '../../../data/repositories/gps_repository.dart';
+
 
 class GeolocationViewModel extends ChangeNotifier {
   GeolocationViewModel({
@@ -10,14 +13,19 @@ class GeolocationViewModel extends ChangeNotifier {
   bool isGeoLocationEnabled;
   String geolocationText;
   bool isSearchLocationEnabled; 
+  final GpsRepository gpsRepository = GpsRepository( 
+    geoLocator: GeoLocator(),
+  );
 
-  void toggleGeoLocation() {
+  void toggleGeoLocation() async {
     if (isGeoLocationEnabled) {
       isGeoLocationEnabled = false;
       geolocationText = "";
+      isSearchLocationEnabled = false;
     } else {
       isGeoLocationEnabled = true;
-      geolocationText = "geolocation";
+      var position = await gpsRepository.getCurrentPosition();
+      geolocationText = "Latitude: ${position.latitude}, Longitude: ${position.longitude}";
       isSearchLocationEnabled = false;
     }
     notifyListeners();
