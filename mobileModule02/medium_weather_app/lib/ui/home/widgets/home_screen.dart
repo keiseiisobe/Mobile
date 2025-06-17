@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late final TabController tabController;
-  late final TextEditingController searchController;
+  late final SearchController searchController;
   late GeolocationViewModel geolocationViewModel;
   late SearchbarViewmodel searchbarViewmodel;
   //late final Future<Position> geoLocation;
@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     tabController = TabController(length: 3, vsync: this);
-    searchController = TextEditingController();
+    searchController = SearchController();
     searchbarViewmodel = SearchbarViewmodel(
       isSearchLocationEnabled: false,
       searchController: searchController,

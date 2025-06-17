@@ -8,9 +8,11 @@ class GeocodingRepository {
   final Geocoding _geocoding;
   Map<String, List<dynamic>>? _cachedGeocoding;
 
-  void getGeocoding(String location) async {
-    print("Requesting geocoding for location: $location");  
-    var result = await _geocoding.requestGeocoding(location);
-    print("Geocoding result: $result");
+  Future<List<dynamic>> getSuggestions(String location) async {
+    var results = await _geocoding.requestGeocoding(location);
+    if (results['results'] == null) {
+      return [];
+    }
+    return results['results'];
   }
 }
