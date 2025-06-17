@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import '../view_model/geolocation_viewmodel.dart';
+import '../../searchbar/view_model/searchbar_viewmodel.dart';
 
 class GeolocationScreen extends StatelessWidget {
-  const GeolocationScreen({super.key, required this.viewModel});
+  const GeolocationScreen({
+    super.key,
+    required this.geolocationViewModel,
+    required this.searchbarViewmodel,
+  });
 
-  final GeolocationViewModel viewModel;
+  final GeolocationViewModel geolocationViewModel;
+  final SearchbarViewmodel searchbarViewmodel;
   
   @override
   Widget build(BuildContext context) {
@@ -13,7 +19,8 @@ class GeolocationScreen extends StatelessWidget {
       alignment: Alignment.center,
       child: IconButton(
         onPressed: () {
-          viewModel.toggleGeoLocation();  
+          geolocationViewModel.toggleGeoLocation();  
+          searchbarViewmodel.disableSearchLocation();
         },
         icon: Icon(
           Icons.near_me,

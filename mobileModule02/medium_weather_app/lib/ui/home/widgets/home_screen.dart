@@ -18,8 +18,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late final TabController tabController;
   late final TextEditingController searchController;
-  bool isGeoLocationEnabled = false;
-  bool isSearchLocationEnabled = false;
   late GeolocationViewModel geolocationViewModel;
   late SearchbarViewmodel searchbarViewmodel;
   //late final Future<Position> geoLocation;
@@ -30,16 +28,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     super.initState();
     tabController = TabController(length: 3, vsync: this);
     searchController = TextEditingController();
-    geolocationViewModel = GeolocationViewModel(
-      isGeoLocationEnabled: isGeoLocationEnabled,
-      geolocationText: "",
-      isSearchLocationEnabled: isSearchLocationEnabled,
-    );
     searchbarViewmodel = SearchbarViewmodel(
-      isSearchLocationEnabled: isSearchLocationEnabled,
+      isSearchLocationEnabled: false,
       searchController: searchController,
-      isGeoLocationEnabled: isGeoLocationEnabled,
     );  
+    geolocationViewModel = GeolocationViewModel(
+      isGeoLocationEnabled: false,
+      geolocationText: Text(""),
+    );
     //geoLocation = determinePosition();
     //citiesData = rootBundle.loadString('assets/cities.csv');
   }
@@ -82,8 +78,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         searchViewModel: searchbarViewmodel,
                         geolocationViewModel: geolocationViewModel
                       ),
-                      TodayScreen(geolocationViewModel: geolocationViewModel),
-                      WeeklyScreen(geolocationViewModel: geolocationViewModel),
+                      TodayScreen(
+                        searchViewModel: searchbarViewmodel,  
+                        geolocationViewModel: geolocationViewModel,
+                      ),
+                      WeeklyScreen(
+                        searchViewModel: searchbarViewmodel,  
+                        geolocationViewModel: geolocationViewModel,
+                      ),
                     ],
                   );
                 }

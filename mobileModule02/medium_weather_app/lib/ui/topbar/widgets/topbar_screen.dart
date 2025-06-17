@@ -33,6 +33,7 @@ class TopbarScreen extends StatelessWidget {
         tabs: [
           SearchbarScreen(
             searchbarViewmodel: searchbarViewmodel,
+            geolocationViewModel: geolocationViewModel,
           ),
           VerticalDivider(
             color: Theme.of(context).colorScheme.onPrimary,
@@ -41,7 +42,8 @@ class TopbarScreen extends StatelessWidget {
             width: 0,
           ),
           GeolocationScreen(
-            viewModel: geolocationViewModel,
+            geolocationViewModel: geolocationViewModel,
+            searchbarViewmodel: searchbarViewmodel,
           ),
         ],
       ),

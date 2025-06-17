@@ -14,18 +14,18 @@ class CurrentlyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var locationText = "";
+    var locationText = Text("");
     if (geolocationViewModel.isGeoLocationEnabled) {
       locationText = geolocationViewModel.geolocationText;
     } else if (searchViewModel.isSearchLocationEnabled) {
-      locationText = searchViewModel.searchController.text;
+      locationText = Text(searchViewModel.searchController.text);
     }
     return  Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,  
       children: [
         Text("Currently"),
-        Text(locationText),
+        locationText,
       ],
     );
   }

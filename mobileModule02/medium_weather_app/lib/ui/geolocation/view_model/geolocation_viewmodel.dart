@@ -2,40 +2,35 @@ import 'package:flutter/material.dart';
 import '../../../data/services/geolocator.dart';
 import '../../../data/repositories/gps_repository.dart';
 
-
 class GeolocationViewModel extends ChangeNotifier {
   GeolocationViewModel({
-    required this.isGeoLocationEnabled,
-    required this.geolocationText,
-    required this.isSearchLocationEnabled,
-  });
+    required isGeoLocationEnabled,
+    required geolocationText,
+  }) : _isGeoLocationEnabled = isGeoLocationEnabled,
+      _geolocationText = geolocationText;
 
-  bool isGeoLocationEnabled;
-  String geolocationText;
-  bool isSearchLocationEnabled; 
-  final GpsRepository gpsRepository = GpsRepository( 
+  bool _isGeoLocationEnabled;
+  Text _geolocationText;
+  final GpsRepository _gpsRepository = GpsRepository( 
     geoLocator: GeoLocator(),
   );
 
+  Text get geolocationText => _geolocationText;
+  bool get isGeoLocationEnabled => _isGeoLocationEnabled;
+
   void toggleGeoLocation() async {
-    if (isGeoLocationEnabled) {
-      isGeoLocationEnabled = false;
-      geolocationText = "";
-      isSearchLocationEnabled = false;
+    if (_isGeoLocationEnabled) {
+      _isGeoLocationEnabled = false;
+      _geolocationText = Text("");
     } else {
-      isGeoLocationEnabled = true;
-      var position = await gpsRepository.getCurrentPosition();
-      geolocationText = "Latitude: ${position.latitude}, Longitude: ${position.longitude}";
-      isSearchLocationEnabled = false;
+      _isGeoLocationEnabled = true;
+      _geolocationText = await _gpsRepository.getCurrentPosition();
     }
     notifyListeners();
   }  
 
-  Widget getGeoLocationText() {
-    if (isGeoLocationEnabled) {
-      return Text(geolocationText);
-    } else {
-      return Text("");
-    }
+  void disableGeoLocation() {
+    _isGeoLocationEnabled = false;
+    notifyListeners();  
   }
 }
