@@ -7,6 +7,14 @@ class WeatherRepository {
     return await _weatherService.requestCurrentWeather(latitude, longitude);
   }
 
+  Future<Map> getTodayWeather(double latitude, double longitude) async {
+    return await _weatherService.requestTodayWeather(latitude, longitude);
+  }  
+
+  Future<Map> getWeeklyWeather(double latitude, double longitude) async {
+    return await _weatherService.requestWeeklyWeather(latitude, longitude);
+  }
+
   String weatherCode2String(int weatherCode) {
     switch (weatherCode) {
       case 0:

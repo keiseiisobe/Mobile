@@ -26,13 +26,24 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     tabController = TabController(length: 3, vsync: this);
+    tabController.addListener(() {
+      if (geolocationViewModel.isGeoLocationEnabled) {
+        geolocationViewModel.weatherDisplay = CircularProgressIndicator();
+        geolocationViewModel.updateWeatherDisplay();
+      } else if (searchbarViewmodel.isSearchLocationEnabled) {
+        searchbarViewmodel.weatherDisplay = CircularProgressIndicator();
+        searchbarViewmodel.updateWeatherDisplay();
+      }
+    });
     searchController = SearchController();
     searchbarViewmodel = SearchbarViewmodel(
       isSearchLocationEnabled: false,
       searchController: searchController,
+      tabController: tabController,
     );  
     geolocationViewModel = GeolocationViewModel(
       isGeoLocationEnabled: false,
+      tabController: tabController,
     );
   }
 

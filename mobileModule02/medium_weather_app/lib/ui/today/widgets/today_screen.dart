@@ -18,7 +18,7 @@ class TodayScreen extends StatelessWidget {
     if (geolocationViewModel.isGeoLocationEnabled) {
       locationText = geolocationViewModel.weatherDisplay;
     } else if (searchViewModel.isSearchLocationEnabled) {
-      locationText = Text(searchViewModel.searchController.text);
+      locationText = searchViewModel.weatherDisplay;
     }
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

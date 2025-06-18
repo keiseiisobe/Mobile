@@ -45,10 +45,14 @@ class SearchbarScreen extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
                   onPressed: () {
+                    searchbarViewmodel.toggleSearchLocation();
+                    geolocationViewModel.disableGeoLocation();  
                     controller.openView();
                   },
                 ),
                 onTap: () {
+                  searchbarViewmodel.toggleSearchLocation();
+                  geolocationViewModel.disableGeoLocation();  
                   controller.openView();
                 },
               );
