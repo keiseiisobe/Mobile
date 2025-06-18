@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../view_model/searchbar_viewmodel.dart';
 import '../../geolocation/view_model/geolocation_viewmodel.dart';
-import '../../../data/repositories/geocoding_repository.dart';
-import '../../../data/services/geocoding.dart';
 
 class SearchbarScreen extends StatelessWidget {
 
@@ -55,8 +53,8 @@ class SearchbarScreen extends StatelessWidget {
                 },
               );
             },
-            suggestionsBuilder: (BuildContext context, SearchController controller) {
-              return searchbarViewmodel.updateSuggestions(controller.text);
+            suggestionsBuilder: (BuildContext context, SearchController controller) async {
+              return await searchbarViewmodel.updateSuggestions(controller.text);
             },
             viewLeading: BackButton(
               color: Theme.of(context).colorScheme.primary, 
@@ -64,26 +62,11 @@ class SearchbarScreen extends StatelessWidget {
             viewOnChanged: (value) {
               searchbarViewmodel.notifyListeners();
             },
-          
-          // TextField(
-          //   controller: searchbarViewmodel.searchController,
-          //   style: TextStyle(
-          //     color: Theme.of(context).colorScheme.onPrimary,
-          //   ),
-          //   cursorColor: Theme.of(context).colorScheme.onPrimary,
-          //   decoration: InputDecoration(
-          //     hintText: "Search location...",
-          //     hintStyle: TextStyle(color: Theme.of(context).colorScheme.primaryContainer),
-          //     border: InputBorder.none,
-          //     prefixIcon: Icon(Icons.search),
-          //     prefixIconColor: Theme.of(context).colorScheme.primaryContainer,
-          //     counterText: "",
-          //   ),
-          //   maxLength: 100,  
-          //   onSubmitted: (value) {
-          //     searchbarViewmodel.toggleSearchLocation();  
-          //     geolocationViewModel.disableGeoLocation();
-          //   },
+            viewOnSubmitted: (value) {
+              searchbarViewmodel.toggleSearchLocation();
+              geolocationViewModel.disableGeoLocation();
+              searchbarViewmodel.searchController.closeView(value);
+            },
           );
         }
       ),

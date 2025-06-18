@@ -1,3 +1,4 @@
+import 'package:geocoding/geocoding.dart';
 import '../services/geocoding.dart';
 
 class GeocodingRepository {
@@ -15,4 +16,9 @@ class GeocodingRepository {
     }
     return results['results'];
   }
+
+  Future<Placemark> getReverseGeocoding(double latitude, double longitude) async {
+    return await _geocoding.requestReverseGeocoding(latitude, longitude);
+  } 
+
 }

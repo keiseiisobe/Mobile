@@ -37,6 +37,7 @@ dependencies:
       ref: eb39649
   geolocator: ^14.0.1
   open_meteo: ^2.0.3
+  geocoding: ^4.0.0
 
   
   # The following adds the Cupertino Icons font to your application.

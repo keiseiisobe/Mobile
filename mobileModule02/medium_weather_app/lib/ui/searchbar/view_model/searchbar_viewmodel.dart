@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../data/repositories/geocoding_repository.dart';
 import '../../../data/services/geocoding.dart';
+import '../../../data/repositories/weather_repository.dart';
+import 'package:open_meteo/open_meteo.dart';
 
 class SearchbarViewmodel extends ChangeNotifier {
   SearchbarViewmodel({
@@ -12,6 +14,8 @@ class SearchbarViewmodel extends ChangeNotifier {
   SearchController searchController;
   List<ListTile> suggestions = [];
   GeocodingRepository geocodingRepository = GeocodingRepository(geocoding: Geocoding());
+  Widget weatherDisplay = Text("");
+  WeatherRepository weatherRepository = WeatherRepository();
 
   @override
   void notifyListeners() {
@@ -30,41 +34,41 @@ class SearchbarViewmodel extends ChangeNotifier {
     notifyListeners();
   }
   
-  List<Widget> updateSuggestions(String query) {
-    return [
-      FutureBuilder<dynamic>(
-        future: geocodingRepository.getSuggestions(query),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return ListTile(
-              title: Text("Error fetching suggestions"),
-            );
-          } else if (snapshot.hasData) {
-            var result = snapshot.data!;
-            if (result.isEmpty) {
-              return ListTile();
-            } else {
-              return ListView(
-                children: result.map((item) {
-                  var title = item['name'];
-                  var subtitle = "${item['admin1']}, ${item['country']}";
-                  return ListTile(
-                    title: Text(title, style: TextStyle(fontSize: 16)),
-                    subtitle: Text(subtitle, style: TextStyle(fontSize: 14)),
-                    onTap: () {
-                      searchController.closeView(title);
-                    },
-                  );
-                }).toList(),  
-              );
-            }
-          } else {
-            return ListTile(
-              title: Text("Loading suggestions..."),
-            );
-          }
-        }
-      ),
-    ];
+  Future<List<Widget>> updateSuggestions(String query) async {
+    var result = await geocodingRepository.getSuggestions(query);
+    if (result.isEmpty) {
+      return [ListTile()];
+    } else {
+      return result.map((item) {
+        var title = item['name'];
+        var subtitle = "${item['admin1']}, ${item['country']}";
+        return ListTile(
+          title: Text(title, style: TextStyle(fontSize: 16)),
+          subtitle: Text(subtitle, style: TextStyle(fontSize: 14)),
+          onTap: () async{
+            searchController.closeView(title);
+            weatherDisplay = await updateWeatherDisplay(item);
+            notifyListeners();
+          },
+        );
+      }).toList();
+    }
   }
+
+  Future<Widget> updateWeatherDisplay(dynamic item) async {
+    var weather = await weatherRepository.getCurrentWeather(
+      item['latitude']!,
+      item['longitude']!,
+    );
+    return Column(
+      children: [
+        Text("City: ${item['name']}"),
+        Text("Region: ${item['admin1']}"),
+        Text("Country: ${item['country']}"),
+        Text("Weather: ${weatherRepository.weatherCode2String(weather[WeatherCurrent.weather_code].value.toInt())}"),
+        Text("Temp: ${weather[WeatherCurrent.temperature_2m].value.toStringAsFixed(1)}°C"),
+        Text("Wind: ${weather[WeatherCurrent.wind_speed_10m].value.toStringAsFixed(1)}km/h"),
+      ],
+    );
+  }  
 }

@@ -20,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   late final SearchController searchController;
   late GeolocationViewModel geolocationViewModel;
   late SearchbarViewmodel searchbarViewmodel;
-  //late final Future<Position> geoLocation;
   late final Future<String> citiesData;
 
   @override
@@ -34,10 +33,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );  
     geolocationViewModel = GeolocationViewModel(
       isGeoLocationEnabled: false,
-      geolocationText: Text(""),
     );
-    //geoLocation = determinePosition();
-    //citiesData = rootBundle.loadString('assets/cities.csv');
   }
 
   @override

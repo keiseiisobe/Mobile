@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import '../services/geolocator.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -8,23 +7,17 @@ class GpsRepository {
   }) : _geoLocator = geoLocator;
 
   final GeoLocator _geoLocator;
-  // save cache of the current position
-  Text? _cachedCurrentPosition;
+  Map<String, double>? _cachedCurrentPosition;
 
-  Future<Text> getCurrentPosition() async {
-    // if (_cachedCurrentPosition != null) {
-    //   return _cachedCurrentPosition!;
-    // }  
-    try {
-      Position position = await _geoLocator.determinePosition();
-      _cachedCurrentPosition = Text("Latitude: ${position.latitude}, Longitude: ${position.longitude}");
-    } catch (e) {
-      _cachedCurrentPosition = Text(
-        "Error: ${e.toString()}",
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.red),
-      );
-    }
+  Future<Map<String, double>> getCurrentPosition() async {
+    if (_cachedCurrentPosition != null) {
+      return _cachedCurrentPosition!;
+    }  
+    Position position = await _geoLocator.determinePosition();
+    _cachedCurrentPosition = {
+      "Latitude": position.latitude,
+      "Longitude": position.longitude,
+    };
     return _cachedCurrentPosition!;
   }  
 }

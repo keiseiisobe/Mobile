@@ -1,4 +1,5 @@
 import 'package:open_meteo/open_meteo.dart';
+import 'package:geocoding/geocoding.dart';
 
 class Geocoding {
   final GeocodingApi _geocodingApi = GeocodingApi();
@@ -8,4 +9,14 @@ class Geocoding {
       name: location,
     );
   }
+
+  Future<Placemark> requestReverseGeocoding(double latitude, double longitude) async {
+    return await setLocaleIdentifier("en_US").then((_) async {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        latitude,
+        longitude, 
+      );
+      return placemarks[0];
+    });
+  }  
 }
