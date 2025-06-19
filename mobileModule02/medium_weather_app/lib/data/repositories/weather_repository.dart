@@ -1,18 +1,37 @@
 import '../services/weather.dart';
+import 'package:http/http.dart';
 
 class WeatherRepository {
   final Weather _weatherService = Weather();
 
   Future<Map> getCurrentWeather(double latitude, double longitude) async{
-    return await _weatherService.requestCurrentWeather(latitude, longitude);
+    try {
+      return await _weatherService.requestCurrentWeather(latitude, longitude);
+    } on ClientException {
+      throw "Network error. Please check your connection.";
+    } on Exception {
+      throw "An error occurred while fetching current weather data.";
+    }
   }
 
   Future<Map> getTodayWeather(double latitude, double longitude) async {
-    return await _weatherService.requestTodayWeather(latitude, longitude);
+    try {
+      return await _weatherService.requestTodayWeather(latitude, longitude);
+    } on ClientException {
+      throw "Network error. Please check your connection.";
+    } on Exception {
+      throw "An error occurred while fetching today's weather data.";
+    }  
   }  
 
   Future<Map> getWeeklyWeather(double latitude, double longitude) async {
-    return await _weatherService.requestWeeklyWeather(latitude, longitude);
+    try {
+      return await _weatherService.requestWeeklyWeather(latitude, longitude);
+    } on ClientException {
+      throw "Network error. Please check your connection.";
+    } on Exception {
+      throw "An error occurred while fetching weekly weather data.";
+    }  
   }
 
   String weatherCode2String(int weatherCode) {

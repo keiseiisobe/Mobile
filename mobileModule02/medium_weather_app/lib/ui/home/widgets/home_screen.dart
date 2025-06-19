@@ -28,10 +28,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     tabController = TabController(length: 3, vsync: this);
     tabController.addListener(() {
       if (geolocationViewModel.isGeoLocationEnabled) {
-        geolocationViewModel.weatherDisplay = CircularProgressIndicator();
         geolocationViewModel.updateWeatherDisplay();
       } else if (searchbarViewmodel.isSearchLocationEnabled) {
-        searchbarViewmodel.weatherDisplay = CircularProgressIndicator();
         searchbarViewmodel.updateWeatherDisplay();
       }
     });
@@ -57,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.secondary,  
         flexibleSpace: TopbarScreen(

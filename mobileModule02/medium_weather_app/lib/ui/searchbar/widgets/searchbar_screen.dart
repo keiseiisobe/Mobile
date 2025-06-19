@@ -66,10 +66,11 @@ class SearchbarScreen extends StatelessWidget {
             viewOnChanged: (value) {
               searchbarViewmodel.notifyListeners();
             },
-            viewOnSubmitted: (value) {
-              searchbarViewmodel.toggleSearchLocation();
-              geolocationViewModel.disableGeoLocation();
+            viewOnSubmitted: (value) async {
               searchbarViewmodel.searchController.closeView(value);
+              // make getFirstSuggestion and updateWeatherDisplay call synchronous using dummy and await.
+              var dummy = await searchbarViewmodel.getFirstSuggestion(value);
+              searchbarViewmodel.updateWeatherDisplay();
             },
           );
         }

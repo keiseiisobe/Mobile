@@ -1,5 +1,6 @@
 import 'package:geocoding/geocoding.dart';
 import '../services/geocoding.dart';
+import 'package:http/http.dart';
 
 class GeocodingRepository {
   GeocodingRepository({
@@ -7,18 +8,32 @@ class GeocodingRepository {
   }) : _geocoding = geocoding;
 
   final Geocoding _geocoding;
-  Map<String, List<dynamic>>? _cachedGeocoding;
 
   Future<List<dynamic>> getSuggestions(String location) async {
-    var results = await _geocoding.requestGeocoding(location);
-    if (results['results'] == null) {
-      return [];
+    try {
+      var results = await _geocoding.requestGeocoding(location);
+      if (!results.containsKey('results')) {
+        if (results.containsKey('error')) {
+            throw results['reason'];
+        } else {
+          return [];
+        }
+      }
+      return results['results'];
+    } on ClientException {
+      throw 'Network error. Please check your connection.';
+    } on Exception {
+      throw 'An error occurred while fetching suggestions.';  
     }
-    return results['results'];
   }
 
   Future<Placemark> getReverseGeocoding(double latitude, double longitude) async {
-    return await _geocoding.requestReverseGeocoding(latitude, longitude);
+    try {
+      return await _geocoding.requestReverseGeocoding(latitude, longitude);
+    } on ClientException {
+      throw "Network error. Please check your connection.";
+    } on Exception {
+      throw "An error occurred while fetching reverse geocoding data.";
+    }
   } 
-
 }

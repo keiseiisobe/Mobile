@@ -112,7 +112,7 @@ class GeolocationViewModel extends ChangeNotifier {
       }
     } catch (e) {
       weatherDisplay = Text(
-        "Error: $e",
+        e.toString(),
         style: TextStyle(
           color: Colors.red,
         ),

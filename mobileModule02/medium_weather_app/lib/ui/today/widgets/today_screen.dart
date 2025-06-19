@@ -20,13 +20,15 @@ class TodayScreen extends StatelessWidget {
     } else if (searchViewModel.isSearchLocationEnabled) {
       locationText = searchViewModel.weatherDisplay;
     }
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text("Today"),
-        locationText,
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("Today"),
+          locationText,
+        ],
+      ),
     );
   }
 }
