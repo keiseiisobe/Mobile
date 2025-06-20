@@ -43,6 +43,16 @@ class CurrentlyScreen extends StatelessWidget {
         )
       );
     }
+    if (!locationText.containsKey('City') ||
+        !locationText.containsKey('Region') ||
+        !locationText.containsKey('Country') ||
+        !locationText.containsKey('Temperature') ||
+        !locationText.containsKey('WeatherCode') ||
+        !locationText.containsKey('WindSpeed')) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Container(
       padding: EdgeInsets.all(40.0),  
       child: DefaultTextStyle(
@@ -56,7 +66,6 @@ class CurrentlyScreen extends StatelessWidget {
           children: [
             Text(
               locationText['City'].toString(),
-              // #FEDC5B
               style: TextStyle(color: Color(0xFFFEDC5B)),
             ),
             SizedBox(height: 4),
@@ -81,7 +90,7 @@ class CurrentlyScreen extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(weatherCode2String(
                       locationText['WeatherCode'],
-                    )),
+                    ), textAlign: TextAlign.center),
                     Icon(
                       weatherCode2Icon(locationText['WeatherCode']),
                       size: 100,
