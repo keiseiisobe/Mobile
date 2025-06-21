@@ -3,7 +3,6 @@ import '../../../data/repositories/geocoding_repository.dart';
 import '../../../data/services/geocoding.dart';
 import '../../../data/repositories/weather_repository.dart';
 import 'package:open_meteo/open_meteo.dart';
-import 'package:intl/intl.dart';
 
 class SearchbarViewmodel extends ChangeNotifier {
   SearchbarViewmodel({
@@ -71,7 +70,7 @@ class SearchbarViewmodel extends ChangeNotifier {
       }
       if (itemTemp.containsKey('error')) {
         weatherDisplay = {
-          'error': itemTemp['error'],  
+          'Error': itemTemp['error'],  
         };
         notifyListeners();
         return;
@@ -98,9 +97,10 @@ class SearchbarViewmodel extends ChangeNotifier {
           'City': itemTemp['name'],
           'Region': itemTemp['admin1'],
           'Country': itemTemp['country'],
-          'WeatherCodeList': weather[WeatherHourly.weather_code].values,
-          'TemperatureList': weather[WeatherHourly.temperature_2m].values,
-          'WindSpeedList': weather[WeatherHourly.wind_speed_10m].values,
+          "Time": weather["hourly"]["time"],
+          "WeatherCodeList": weather["hourly"]["weather_code"],
+          "TemperatureList": weather["hourly"]["temperature_2m"],
+          "WindSpeedList": weather["hourly"]["wind_speed_10m"],
         };
       } else { // tabController.index == 2
         var weather = await weatherRepository.getWeeklyWeather(
@@ -111,9 +111,10 @@ class SearchbarViewmodel extends ChangeNotifier {
           'City': itemTemp['name'],
           'Region': itemTemp['admin1'],
           'Country': itemTemp['country'],
-          'WeatherCodeList': weather[WeatherDaily.weather_code].values,
-          'TemperatureMinList': weather[WeatherDaily.temperature_2m_min].values,
-          'TemperatureMaxList': weather[WeatherDaily.temperature_2m_max].values,
+          "Time": weather["daily"]["time"],
+          "WeatherCodeList": weather["daily"]["weather_code"],
+          "TemperatureMinList": weather["daily"]["temperature_2m_min"],
+          "TemperatureMaxList": weather["daily"]["temperature_2m_max"],
         };
       }
     } catch (e) {

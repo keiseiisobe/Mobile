@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/weather.dart';
 import 'package:http/http.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 class WeatherRepository {
   final Weather _weatherService = Weather();
@@ -104,49 +105,63 @@ String weatherCode2String(int weatherCode) {
 IconData weatherCode2Icon(int weatherCode) {
   switch (weatherCode) {
     case 0:
-      return Icons.wb_sunny;
+      return WeatherIcons.day_sunny;
     case 1:
+      return WeatherIcons.day_cloudy;
     case 2:
-      return Icons.wb_cloudy;
+      return WeatherIcons.cloudy;
     case 3:
-      return Icons.cloud;
+      return WeatherIcons.cloudy_gusts;
     case 45:
+      return WeatherIcons.fog;
     case 48:
-      return Icons.foggy;
+      return WeatherIcons.fog;
     case 51:
+      return WeatherIcons.rain;
     case 53:
+      return WeatherIcons.rain;
     case 55:
-      return Icons.grain;
+      return WeatherIcons.rain;
     case 56:
+      return WeatherIcons.snow_wind;
     case 57:
-      return Icons.snowing;
+      return WeatherIcons.snow_wind;
     case 61:
+      return WeatherIcons.rain;
     case 63:
+      return WeatherIcons.rain;
     case 65:
-      return Icons.water_drop;
+      return WeatherIcons.rain;
     case 66:
+      return WeatherIcons.snow_wind;
     case 67:
-      return Icons.snowing;
+      return WeatherIcons.snow_wind;
     case 71:
+      return WeatherIcons.snow_wind;
     case 73:
+      return WeatherIcons.snow_wind;
     case 75:
-      return Icons.ac_unit;
+      return WeatherIcons.snow_wind;
     case 77:
-      return Icons.snowing;
+      return WeatherIcons.snow_wind;
     case 80:
+      return WeatherIcons.showers;
     case 81:
+      return WeatherIcons.showers;
     case 82:
-      return Icons.shower;
+      return WeatherIcons.showers;
     case 85:
+      return WeatherIcons.snow_wind;
     case 86:
-      return Icons.snowing;
+      return WeatherIcons.snow_wind;
     case 95:
-      return Icons.thunderstorm;
+      return WeatherIcons.thunderstorm;
     case 96:
+      return WeatherIcons.thunderstorm;
     case 99:
-      return Icons.thunderstorm;
+      return WeatherIcons.thunderstorm;
 
     default:
-      return Icons.help_outline;
+      return WeatherIcons.cloudy;
   }
 }

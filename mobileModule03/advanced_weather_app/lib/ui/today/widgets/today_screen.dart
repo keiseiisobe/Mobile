@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:weather_icons/weather_icons.dart';
 import '../../searchbar/view_model/searchbar_viewmodel.dart';
 import '../../geolocation/view_model/geolocation_viewmodel.dart';
 import '../../../data/repositories/weather_repository.dart';
@@ -43,9 +44,32 @@ class TodayScreen extends StatelessWidget {
         ),
       );
     }
+    if (locationText.containsKey('Error')) {
+      return Center(
+        child: Container(
+          margin: EdgeInsets.all(20.0),  
+          padding: EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: Colors.black,
+            border: Border.all(color: Colors.white, width: 2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            locationText['Error'].toString(),
+            style: TextStyle(
+              color: Color(0xFFFEDC5B),
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
     if (!locationText.containsKey('City') ||
         !locationText.containsKey('Region') ||
         !locationText.containsKey('Country') ||
+        !locationText.containsKey('Time') ||
         !locationText.containsKey('TemperatureList') ||
         !locationText.containsKey('WeatherCodeList') ||
         !locationText.containsKey('WindSpeedList')) {
@@ -60,9 +84,13 @@ class TodayScreen extends StatelessWidget {
           Text(
             locationText['City'].toString(),
             style: TextStyle(color: Color(0xFFFEDC5B)),
+            textAlign: TextAlign.center,
           ),
           SizedBox(height: 4),
-          Text("${locationText['Region']}, ${locationText['Country']}"),
+          Text(
+            "${locationText['Region']}, ${locationText['Country']}",
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: 10),
           Expanded(
             child: Container(
@@ -75,10 +103,10 @@ class TodayScreen extends StatelessWidget {
                 LineChartData(
                   lineBarsData: [
                     LineChartBarData(
-                      spots: locationText['TemperatureList'].entries.map((temp) {
+                      spots: locationText['Time'].asMap().entries.map((temp) {
                         return FlSpot(
-                          DateTime.parse(temp.key.toString()).hour.toDouble(),
-                          temp.value,
+                          DateTime.parse(temp.value.toString()).hour.toDouble(),
+                          locationText['TemperatureList'][temp.key].toDouble(),
                         );
                       }).toList().cast<FlSpot>(),
                       barWidth: 4,
@@ -153,7 +181,7 @@ class TodayScreen extends StatelessWidget {
           Expanded(
             child: ListView(
               scrollDirection: Axis.horizontal,
-              children: locationText['TemperatureList'].entries.map((temp) {
+              children: locationText['Time'].asMap().entries.map((temp) {
                 return Container(
                   width: 100,
                   margin: EdgeInsets.all(8.0),
@@ -166,23 +194,23 @@ class TodayScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "${DateTime.parse(temp.key.toString()).hour}:00",
+                        "${DateTime.parse(temp.value.toString()).hour}:00",
                       ),
                       SizedBox(height: 4),
                       Text(
-                        "${temp.value.toInt()}°C",
+                        "${locationText["TemperatureList"][temp.key].toStringAsFixed(1)}°C",
                         style: TextStyle(
                           color: Color(0xFFFEDC5B),
                           fontSize: 20,
                         ),
                       ),
-                      SizedBox(height: 4),
-                      Icon(
+                      SizedBox(height: 8),
+                      BoxedIcon(
                         weatherCode2Icon(locationText['WeatherCodeList'][temp.key].toInt()),
                         color: Color(0xFF88CBE3),
                         size: 40,
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: 8),
                       Text("${locationText['WindSpeedList'][temp.key].toStringAsFixed(1)} m/s"),
                     ],
                   ),

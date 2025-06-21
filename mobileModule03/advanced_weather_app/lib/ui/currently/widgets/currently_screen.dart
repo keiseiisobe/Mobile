@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_icons/weather_icons.dart';
 import '../../searchbar/view_model/searchbar_viewmodel.dart';
 import '../../geolocation/view_model/geolocation_viewmodel.dart';
 import '../../../data/repositories/weather_repository.dart';
@@ -43,6 +44,28 @@ class CurrentlyScreen extends StatelessWidget {
         )
       );
     }
+    if (locationText.containsKey('Error')) {
+      return Center(
+        child: Container(
+          margin: EdgeInsets.all(20.0),  
+          padding: EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: Colors.black,
+            border: Border.all(color: Colors.white, width: 2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            locationText['Error'].toString(),
+            style: TextStyle(
+              color: Color(0xFFFEDC5B),
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
     if (!locationText.containsKey('City') ||
         !locationText.containsKey('Region') ||
         !locationText.containsKey('Country') ||
@@ -67,9 +90,13 @@ class CurrentlyScreen extends StatelessWidget {
             Text(
               locationText['City'].toString(),
               style: TextStyle(color: Color(0xFFFEDC5B)),
+              textAlign: TextAlign.center,
             ),
             SizedBox(height: 4),
-            Text("${locationText['Region']}, ${locationText['Country']}"),
+            Text(
+              "${locationText['Region']}, ${locationText['Country']}",
+              textAlign: TextAlign.center,
+            ),
             SizedBox(height: 10),
             Expanded(
               child: Container(
@@ -87,15 +114,17 @@ class CurrentlyScreen extends StatelessWidget {
                       "${locationText['Temperature']}°C",
                       style: TextStyle(color: Color(0xFFFEDC5B)),
                     ),
+                    SizedBox(height: 8),
+                    Text(
+                      weatherCode2String(locationText['WeatherCode']),
+                      textAlign: TextAlign.center),
                     SizedBox(height: 4),
-                    Text(weatherCode2String(
-                      locationText['WeatherCode'],
-                    ), textAlign: TextAlign.center),
-                    Icon(
+                    BoxedIcon(
                       weatherCode2Icon(locationText['WeatherCode']),
                       size: 100,
                       color: Colors.white,
                     ),
+                    SizedBox(height: 8),
                     Row(
                       mainAxisSize: MainAxisSize.min,  
                       mainAxisAlignment: MainAxisAlignment.center,  

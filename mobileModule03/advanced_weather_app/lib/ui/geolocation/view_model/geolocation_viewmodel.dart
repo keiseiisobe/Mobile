@@ -5,7 +5,6 @@ import '../../../data/repositories/weather_repository.dart';
 import '../../../data/repositories/geocoding_repository.dart';
 import '../../../data/services/geocoding.dart';
 import 'package:open_meteo/open_meteo.dart';
-import 'package:intl/intl.dart';
 
 class GeolocationViewModel extends ChangeNotifier {
   GeolocationViewModel({
@@ -61,9 +60,10 @@ class GeolocationViewModel extends ChangeNotifier {
           "City": placemarks.subAdministrativeArea != "" ? placemarks.subAdministrativeArea : placemarks.administrativeArea,
           "Region": placemarks.administrativeArea,
           "Country": placemarks.country,
-          "WeatherCodeList": weather[WeatherHourly.weather_code].values,
-          "TemperatureList": weather[WeatherHourly.temperature_2m].values,
-          "WindSpeedList": weather[WeatherHourly.wind_speed_10m].values,
+          "Time": weather["hourly"]["time"],
+          "WeatherCodeList": weather["hourly"]["weather_code"],
+          "TemperatureList": weather["hourly"]["temperature_2m"],
+          "WindSpeedList": weather["hourly"]["wind_speed_10m"],
         };
       } else { // _tabController.index == 2
         var weather = await _weatherRepository.getWeeklyWeather(
@@ -74,9 +74,10 @@ class GeolocationViewModel extends ChangeNotifier {
           "City": placemarks.subAdministrativeArea != "" ? placemarks.subAdministrativeArea : placemarks.administrativeArea,
           "Region": placemarks.administrativeArea,
           "Country": placemarks.country,
-          "WeatherCodeList": weather[WeatherDaily.weather_code].values,
-          "TemperatureMinList": weather[WeatherDaily.temperature_2m_min].values,
-          "TemperatureMaxList": weather[WeatherDaily.temperature_2m_max].values,
+          "Time": weather["daily"]["time"],
+          "WeatherCodeList": weather["daily"]["weather_code"],
+          "TemperatureMinList": weather["daily"]["temperature_2m_min"],
+          "TemperatureMaxList": weather["daily"]["temperature_2m_max"],
         };
       }
     } catch (e) {
