@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "660748519011",
+    "project_id": "my-cool-project-45922",
+    "storage_bucket": "my-cool-project-45922.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:660748519011:android:d2b4190cb9d82944035a56",
+        "android_client_info": {
+          "package_name": "com.example.diary_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF_Ko4gzHKtrY7UHd9aGGykQxHE1oMYB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
