@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:github_sign_in/github_sign_in.dart';
+import '../../../main.dart'; // Adjust the import based on your project structure
 
 Future<UserCredential> signInWithGoogle() async {
   // Trigger the authentication flow
@@ -28,9 +29,21 @@ Future<UserCredential> signInWithGitHub(BuildContext context) async {
   );
   var result = await gitHubSignIn.signIn(context);
 
-  // Create a new provider
   final credential = GithubAuthProvider.credential(result.token!);
   return await FirebaseAuth.instance.signInWithCredential(credential);
-  // return await FirebaseAuth.instance.signInWithProvider(githubProvider);
 }  
 
+void addUserToDatabase(UserCredential userCredential) {
+  db.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).get().then((doc) {
+    if (!doc.exists) {
+      db.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).set({
+        'name': userCredential.user?.displayName ?? '',
+        'email': userCredential.user?.email ?? '',
+        'photoURL': userCredential.user?.photoURL ?? '',
+        'createdAt': DateTime.now(),
+      });
+    }
+  }).catchError((error) {
+    print("Failed to add user: $error");
+  });
+}

@@ -1,4 +1,3 @@
-import 'package:diary_app/ui/widgets/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:sign_button/sign_button.dart';
 import '../view_model/login_viewmodel.dart';
@@ -32,8 +31,9 @@ class LoginScreen extends StatelessWidget {
             SignInButton(
               buttonType: ButtonType.google,
               buttonSize: ButtonSize.medium,
-              onPressed: () {
-                signInWithGoogle();
+              onPressed: () async {
+                var userCredential = await signInWithGoogle();
+                addUserToDatabase(userCredential);
               },
             ),
             SizedBox(
@@ -42,8 +42,9 @@ class LoginScreen extends StatelessWidget {
             SignInButton(
               buttonType: ButtonType.github,
               buttonSize: ButtonSize.medium,
-              onPressed: () {
-                signInWithGitHub(context);
+              onPressed: () async {
+                var userCredential = await signInWithGitHub(context);
+                addUserToDatabase(userCredential);
               },
             ),
           ],

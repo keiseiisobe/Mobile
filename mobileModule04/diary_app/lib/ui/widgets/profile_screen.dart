@@ -89,22 +89,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   showDialog<void>(
                     context: context,
                     builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Add New Entry'),
-                        actions: [
-                          ElevatedButton(
-                            onPressed: () {
-                              db.collection("users").add({
-                                "uid": FirebaseAuth.instance.currentUser?.uid,  
-                                "name": FirebaseAuth.instance.currentUser?.displayName ?? "Anonymous",
-                                "email": FirebaseAuth.instance.currentUser?.email,
-                                "created_at": DateTime.now(),
-                              });
-                            },
-                            child: const Text('Add New Entry'),
-                          ),
-                        ],
-                      );
+                      return _MyDialogScreen();
                     },  
                   );
                 },
@@ -139,4 +124,130 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       });
     });
   }  
+}
+
+class _MyDialogScreen extends StatefulWidget {
+  const _MyDialogScreen();
+
+  @override
+  State<_MyDialogScreen> createState() => _MyDialogScreenState();
+}
+
+class _MyDialogScreenState extends State<_MyDialogScreen> {
+  dynamic _selectedFeeling = 'neutral';
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      title: const Text('Add New Entry'),
+      contentPadding: const EdgeInsets.all(20),
+      children: [
+        Form(
+          key: _formKey,  
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _titleController,  
+                decoration: const InputDecoration(
+                  labelText: 'Title',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a title';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 10),
+              DropdownButton(
+                // defaut value to neutral
+                value: _selectedFeeling,
+                items: [
+                  DropdownMenuItem(
+                    value: 'very happy',  
+                    child: Icon(
+                      Icons.sentiment_very_satisfied,
+                      color: Colors.red,
+                      size: 30,
+                    ),
+                  ),  
+                  DropdownMenuItem(
+                    value: 'happy',  
+                    child: Icon(
+                      Icons.sentiment_satisfied,
+                      color: Colors.orange,
+                      size: 30,
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 'neutral',  
+                    child: Icon(
+                      Icons.sentiment_neutral,
+                      color: Colors.green,
+                      size: 30,
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 'sad',  
+                    child: Icon(
+                      Icons.sentiment_dissatisfied,
+                      color: Colors.blue,
+                      size: 30,
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 'very sad',  
+                    child: Icon(
+                      Icons.sentiment_very_dissatisfied,
+                      color: Colors.purple,
+                      size: 30,
+                    ),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedFeeling = value;
+                  });
+                },
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                controller: _contentController,  
+                decoration: const InputDecoration(
+                  labelText: 'Content',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter content';
+                  }
+                  return null;
+                },
+                maxLines: 5,
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    db.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).collection('entries').add({
+                      'title': _titleController.text,
+                      'feeling': _selectedFeeling,
+                      'content': _contentController.text,
+                      'timestamp': DateTime.now(),
+                    });
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('Add Entry'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
