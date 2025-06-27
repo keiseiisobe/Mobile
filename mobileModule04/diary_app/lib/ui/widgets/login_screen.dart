@@ -32,8 +32,12 @@ class LoginScreen extends StatelessWidget {
               buttonType: ButtonType.google,
               buttonSize: ButtonSize.medium,
               onPressed: () async {
-                var userCredential = await signInWithGoogle();
-                addUserToDatabase(userCredential);
+                try {
+                  var userCredential = await signInWithGoogle();
+                  addUserToDatabase(userCredential);
+                } catch (e) {
+                  print('Error signing in with Google: $e');  
+                }
               },
             ),
             SizedBox(
@@ -43,8 +47,12 @@ class LoginScreen extends StatelessWidget {
               buttonType: ButtonType.github,
               buttonSize: ButtonSize.medium,
               onPressed: () async {
-                var userCredential = await signInWithGitHub(context);
-                addUserToDatabase(userCredential);
+                try {
+                  var userCredential = await signInWithGitHub(context);
+                  addUserToDatabase(userCredential);
+                } catch (e) {
+                  print('Error signing in with GitHub: $e');
+                }
               },
             ),
           ],
@@ -53,12 +61,3 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-
-// GoogleProvider(
-//   clientId: '660748519011-1v2plsvbsnkb8a9ulds6a15polrm5fsl.apps.googleusercontent.com',
-// ),
-// GithubProvider(
-//   clientId: 'Ov23liHMgBSSJ5Hhr3G2',
-//   clientSecret: '24e44f2ab43571863259877f1004fa29eb43c676',
-//   callbackUrl: 'https://my-cool-project-45922.firebaseapp.com/__/auth/handler',
-// ),

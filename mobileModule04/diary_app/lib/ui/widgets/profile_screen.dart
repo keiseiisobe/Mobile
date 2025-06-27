@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../../main.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'profile_body_user_screen.dart';
+import 'profile_body_entries_screen.dart';
+import 'add_entry_screen.dart';
+import 'entries_screen.dart' show feeling2Icon;
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({super.key});
@@ -11,12 +15,9 @@ class MyProfileScreen extends StatefulWidget {
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
 
-  Map data = {};
-    
   @override
   void initState() {
     super.initState();
-    loadData(FirebaseAuth.instance.currentUser);
   }
 
   @override
@@ -31,223 +32,106 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,  
         appBar: AppBar(
-          title: const Text('Profile'),
+          title: Text(
+            'Profile',
+            style: GoogleFonts.lobster(
+              fontSize: 24,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
           actions: [
             IconButton(
               icon: const Icon(Icons.logout),
               onPressed: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.pop(context);
+                try {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pop(context);
+                } catch (e) {
+                  print('Error signing out: $e');
+                }  
               },
             ),
           ],
         ),
-        body: Center(
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),  
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView(
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(
-                        FirebaseAuth.instance.currentUser?.photoURL ?? 
-                            'https://www.gravatar.com/avatar'),
+                    ProfileBodyUserScreen(),
+                    ProfileBodyEntriesScreen(),
+                    Text(
+                      'Feelings Overview',
+                      style: GoogleFonts.lobster(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,  
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(width: 20),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          FirebaseAuth.instance.currentUser?.displayName ?? "Anonymous",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,  
-                          ),
-                        ),
-                        Text(
-                          FirebaseAuth.instance.currentUser?.email ?? "No email",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],  
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _buildFeelingsOverview(),
+                      )
                     ),
                   ],
                 ),
-              ),
-              Text(
-                data.toString(),
-                style: TextStyle(color: Colors.white),
-              ),
-              ElevatedButton(
+            ),
+            Container(
+              padding: const EdgeInsets.all(40),  
+              child: ElevatedButton(
                 onPressed: () {
                   showDialog<void>(
                     context: context,
                     builder: (context) {
-                      return _MyDialogScreen();
+                      return AddEntryScreen();
                     },  
                   );
                 },
-                child: const Text('Add New Entry'),
-              )
-            ],
-          ),
+                child: Text(
+                  'Add New Entry',
+                  style: GoogleFonts.lobster(
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
-      ),
-    );
+        ),
+      );
   }
 
-  void loadData(User? user) {
-    if (user == null) {
-      data = {};
-    }
-    db.collection('users').where('uid', isEqualTo: user?.uid).get().then((snapshot) {
-      var doc = snapshot.docs[0];
-      if (doc.exists) {
-        setState(() {
-          data = doc.data();
-        });
-      } else {
-        setState(() {
-          data = {"No data": "No data available"};
-        });
-      }
-    }).catchError((error) {
-      print("Error fetching user data: $error");
-      setState(() {
-        data = {};
-      });
-    });
+  List<ListTile>  _buildFeelingsOverview() {
+    var feelings = [
+      {'feeling': 'very happy', 'title': 'Joy Ascendant', 'subtitle': 'A Heart\'s Merry Dance, a Soul\'s Bright Dawn'},
+      {'feeling': 'happy', 'title': 'Sweet Contentment', 'subtitle': 'A Gentle Smile, a Peaceful Ease'},
+      {'feeling': 'neutral', 'title': 'Calm Equanimity', 'subtitle': 'A Still Lake, a Balanced Scale'},
+      {'feeling': 'sad', 'title': 'Sorrow\'s Shadow', 'subtitle': 'A Heavy Heart, a Lingering Sigh'},
+      {'feeling': 'very sad', 'title': 'Profound Lament', 'subtitle': 'A Soul\'s Deep Woe, a Cry from the Abyss'},
+    ];
+    return feelings.map((feeling) {
+      return ListTile(
+        leading: feeling2Icon(feeling['feeling']!, 30),
+        title: Text(
+          feeling['title']!,
+          style: GoogleFonts.lobster(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          )
+        ),
+        subtitle: Text(
+          feeling['subtitle']!,
+          style: GoogleFonts.lobster(
+            color: Colors.white,
+            fontSize: 16,
+          )
+        ),
+      );
+    }).toList();  
   }  
 }
 
-class _MyDialogScreen extends StatefulWidget {
-  const _MyDialogScreen();
-
-  @override
-  State<_MyDialogScreen> createState() => _MyDialogScreenState();
-}
-
-class _MyDialogScreenState extends State<_MyDialogScreen> {
-  dynamic _selectedFeeling = 'neutral';
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _contentController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return SimpleDialog(
-      title: const Text('Add New Entry'),
-      contentPadding: const EdgeInsets.all(20),
-      children: [
-        Form(
-          key: _formKey,  
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _titleController,  
-                decoration: const InputDecoration(
-                  labelText: 'Title',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a title';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 10),
-              DropdownButton(
-                // defaut value to neutral
-                value: _selectedFeeling,
-                items: [
-                  DropdownMenuItem(
-                    value: 'very happy',  
-                    child: Icon(
-                      Icons.sentiment_very_satisfied,
-                      color: Colors.red,
-                      size: 30,
-                    ),
-                  ),  
-                  DropdownMenuItem(
-                    value: 'happy',  
-                    child: Icon(
-                      Icons.sentiment_satisfied,
-                      color: Colors.orange,
-                      size: 30,
-                    ),
-                  ),
-                  DropdownMenuItem(
-                    value: 'neutral',  
-                    child: Icon(
-                      Icons.sentiment_neutral,
-                      color: Colors.green,
-                      size: 30,
-                    ),
-                  ),
-                  DropdownMenuItem(
-                    value: 'sad',  
-                    child: Icon(
-                      Icons.sentiment_dissatisfied,
-                      color: Colors.blue,
-                      size: 30,
-                    ),
-                  ),
-                  DropdownMenuItem(
-                    value: 'very sad',  
-                    child: Icon(
-                      Icons.sentiment_very_dissatisfied,
-                      color: Colors.purple,
-                      size: 30,
-                    ),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedFeeling = value;
-                  });
-                },
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: _contentController,  
-                decoration: const InputDecoration(
-                  labelText: 'Content',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter content';
-                  }
-                  return null;
-                },
-                maxLines: 5,
-              ),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    db.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).collection('entries').add({
-                      'title': _titleController.text,
-                      'feeling': _selectedFeeling,
-                      'content': _contentController.text,
-                      'timestamp': DateTime.now(),
-                    });
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Add Entry'),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}

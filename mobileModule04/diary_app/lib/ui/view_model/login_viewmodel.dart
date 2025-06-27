@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:github_sign_in/github_sign_in.dart';
-import '../../../main.dart'; // Adjust the import based on your project structure
+import '../../../main.dart';
 
 Future<UserCredential> signInWithGoogle() async {
   // Trigger the authentication flow
@@ -37,9 +37,14 @@ void addUserToDatabase(UserCredential userCredential) {
   db.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).get().then((doc) {
     if (!doc.exists) {
       db.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).set({
-        'name': userCredential.user?.displayName ?? '',
-        'email': userCredential.user?.email ?? '',
-        'photoURL': userCredential.user?.photoURL ?? '',
+        'name': userCredential.user?.displayName
+          ?? 'Anonymous',
+        'email': userCredential.user?.email
+          ?? userCredential.additionalUserInfo?.profile?['email']
+          ?? userCredential.user?.providerData[0].email
+          ?? 'No email',
+        'photoURL': userCredential.user?.photoURL
+          ?? 'https://www.gravatar.com/avatar',
         'createdAt': DateTime.now(),
       });
     }
