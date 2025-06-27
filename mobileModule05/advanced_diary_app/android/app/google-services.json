@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "660748519011",
+    "project_id": "my-cool-project-45922",
+    "storage_bucket": "my-cool-project-45922.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:660748519011:android:e0b6c648e4a9180a035a56",
+        "android_client_info": {
+          "package_name": "com.example.advanced_diary_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "660748519011-7le819dfb7krncguk9bafhi7vaesgbp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF_Ko4gzHKtrY7UHd9aGGykQxHE1oMYB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "660748519011-7le819dfb7krncguk9bafhi7vaesgbp9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "660748519011-1v2plsvbsnkb8a9ulds6a15polrm5fsl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mydiaryApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:660748519011:android:d2b4190cb9d82944035a56",
+        "android_client_info": {
+          "package_name": "com.example.diary_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "660748519011-7le819dfb7krncguk9bafhi7vaesgbp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF_Ko4gzHKtrY7UHd9aGGykQxHE1oMYB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "660748519011-7le819dfb7krncguk9bafhi7vaesgbp9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "660748519011-1v2plsvbsnkb8a9ulds6a15polrm5fsl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mydiaryApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
