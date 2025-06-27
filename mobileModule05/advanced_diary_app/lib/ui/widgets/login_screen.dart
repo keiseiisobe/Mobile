@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sign_button/sign_button.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../view_model/login_viewmodel.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -10,17 +11,23 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Sign In'),
+        title: Text(
+          'Sign In',
+          style: GoogleFonts.lobster(
+            fontSize: 24,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
+            Text(
               'Welcome',
-              style: TextStyle(
+              style: GoogleFonts.lobster(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: 32,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
