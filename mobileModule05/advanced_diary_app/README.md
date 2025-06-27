@@ -1,16 +1,12 @@
 # advanced_diary_app
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<li>
+  <img src='images/IMG_2003.PNG' style='width: 200px;height: 400px'>
+  <img src='images/IMG_2004.PNG' style='width: 200px;height: 400px'>
+  <img src='images/IMG_2005.PNG' style='width: 200px;height: 400px'>
+  <img src='images/IMG_2006.PNG' style='width: 200px;height: 400px'>
+  <img src='images/IMG_2007.PNG' style='width: 200px;height: 400px'>
+  <img src='images/IMG_2008.PNG' style='width: 200px;height: 400px'>
+  <img src='images/IMG_2009.PNG' style='width: 200px;height: 400px'>
+  <img src='images/IMG_2010.PNG' style='width: 200px;height: 400px'>
+</li>
